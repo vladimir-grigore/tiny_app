@@ -17,6 +17,17 @@ app.get('/urls.json', (request, response) => {
   response.json(urlDatabase);
 });
 
+app.get('/urls', (request, response) => {
+  let templateVars = { urls: urlDatabase };
+  response.render('urls_index', templateVars);
+});
+
+app.get('/urls/:id', (request, response) => {
+  var templateVars = { shortURL: request.params.id };
+  templateVars['url'] = urlDatabase[request.params.id];
+  response.render('urls_show', templateVars);
+});
+
 app.get('/hello', (request, response) => {
   response.end("<html><body>Hello <b>World</b></body></html>\n");
 });

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>TinyApp</title>
+</head>
+<body>
+  <div>
+    <% for(var item in urls) {%>
+        <% if(urls.hasOwnProperty(item)){ %>
+            <li><%= item %> : <%= urls[item] %></li>
+        <% }%>
+    <% }%>
+    <a href="#">Shorten URL</a>
+  </div>
+</body>
+</html>
