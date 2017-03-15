@@ -1,14 +1,17 @@
 var express = require('express');
 var app = express();
 const bodyParser = require('body-parser');
+var crypto = require('crypto');
 var PORT = process.env.PORT || 8080;
 
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended: true}));
 
 function generateRandomString(){
-
+  var id = crypto.randomBytes(3).toString('hex');
+  console.log(id)
 }
+generateRandomString();
 
 var urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
