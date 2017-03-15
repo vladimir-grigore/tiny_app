@@ -63,6 +63,15 @@ app.get('/urls/:id', (request, response) => {
   response.render('urls_show', templateVars);
 });
 
+//Handle updating a longUrl on /urls/:id page
+app.post('/urls/:id', (request, response) => {
+  //Set the value in the DB to the new longURL
+  urlDatabase[request.params.id] = request.body.longURL;
+
+  //Refresh page so that the new longURL is displayed
+  return response.redirect(`/urls/${request.params.id}`);
+});
+
 //Handle deletion of a url and redirect to /urls page
 app.post('/urls/:id/delete', (request, response) => {
   delete urlDatabase[request.params.id];

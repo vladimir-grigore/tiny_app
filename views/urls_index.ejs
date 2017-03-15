@@ -10,15 +10,19 @@
   </header>
 
   <div>
-    <% for(var item in urls) {%>
-        <% if(urls.hasOwnProperty(item)){ %>
-            <li><%= item %> : <%= urls[item] %></li>
+    <ul>
+      <% for(var item in urls) {%>
+          <% if(urls.hasOwnProperty(item)){ %>
+            <li><%= item %> : <%= urls[item] %>
               <form method="POST" action="/urls/<%= item %>/delete">
                 <input type="submit" value="Delete">
               </form>
-        <% }%>
-    <% }%>
+            </li>
+          <% }%>
+      <% }%>
+    </ul>
     <a href="/urls/new">Shorten URL</a>
   </div>
+
 </body>
 </html>
