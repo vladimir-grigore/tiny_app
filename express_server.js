@@ -24,23 +24,23 @@ var urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
-//index page
+//Index page
 app.get('/', (request, response) => {
   response.send('Hello');
 });
 
-//return the urlDatabase object in JSON format
+//Return the urlDatabase object in JSON format
 app.get('/urls.json', (request, response) => {
   response.json(urlDatabase);
 });
 
-//display the /urls page - will show all items in urlDatabase object
+//Display the /urls page - will show all items in urlDatabase object
 app.get('/urls', (request, response) => {
   let templateVars = { urls: urlDatabase };
   response.render('urls_index', templateVars);
 });
 
-//post action after submitting the form on /urls/new
+//Post action after submitting the form on /urls/new
 //Creates a new entry in urlDatabase with a random key
 //and the longURL passed in the request as a value
 app.post('/urls', (request, response) => {
@@ -51,18 +51,23 @@ app.post('/urls', (request, response) => {
   return response.redirect(`/urls/${shortURL}`);
 });
 
-//display the /urls/new page
+//Display the /urls/new page
 app.get('/urls/new', (request, response) => {
   response.render('urls_new');
 });
 
-//display details page for a specific key in urlDatabase object
+//Display details page for a specific key in urlDatabase object
 app.get('/urls/:id', (request, response) => {
   var templateVars = { shortURL: request.params.id };
   templateVars['url'] = urlDatabase[request.params.id];
   response.render('urls_show', templateVars);
 });
 
+//Handle deletion of a url and redirect to /urls page
+app.post('/urls/:id/delete', (request, response) => {
+  delete urlDatabase[request.params.id];
+  response.redirect('/urls');
+});
 
 //Handle url redirection when hitting a short url
 app.get('/u/:shortURL', (request, response) => {
@@ -70,12 +75,7 @@ app.get('/u/:shortURL', (request, response) => {
   response.redirect(longURL);
 });
 
-//display the /hello page
-app.get('/hello', (request, response) => {
-  response.end("<html><body>Hello <b>World</b></body></html>\n");
-});
-
-//open port 8080
+//Open port 8080
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
