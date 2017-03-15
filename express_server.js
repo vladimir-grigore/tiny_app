@@ -24,10 +24,19 @@ app.get('/urls', (request, response) => {
   response.render('urls_index', templateVars);
 });
 
+app.post('/urls', (request, response) => {
+  console.log(request.body);
+  response.send('OK');
+});
+
 app.get('/urls/:id', (request, response) => {
   var templateVars = { shortURL: request.params.id };
   templateVars['url'] = urlDatabase[request.params.id];
   response.render('urls_show', templateVars);
+});
+
+app.get('/urls/new', (request, response) => {
+  response.render('urls_new');
 });
 
 app.get('/hello', (request, response) => {
