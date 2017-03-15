@@ -38,7 +38,9 @@ app.get('/urls.json', (request, response) => {
 
 //Display the /urls page - will show all items in urlDatabase object
 app.get('/urls', (request, response) => {
-  let templateVars = { urls: urlDatabase };
+  let templateVars = {
+    urls: urlDatabase,
+    username: request.cookies.username };
   response.render('urls_index', templateVars);
 });
 
@@ -55,12 +57,16 @@ app.post('/urls', (request, response) => {
 
 //Display the /urls/new page
 app.get('/urls/new', (request, response) => {
-  response.render('urls_new');
+  let templateVars = {username: request.cookies.username};
+  response.render('urls_new', templateVars);
 });
 
 //Display details page for a specific key in urlDatabase object
 app.get('/urls/:id', (request, response) => {
-  var templateVars = { shortURL: request.params.id };
+  let templateVars = {
+    shortURL: request.params.id,
+    username: request.cookies.username
+     };
   templateVars['url'] = urlDatabase[request.params.id];
   response.render('urls_show', templateVars);
 });
@@ -89,7 +95,7 @@ app.get('/u/:shortURL', (request, response) => {
 //Handle setting the cookie for the username
 app.post('/login', (request, response) => {
   //Set the cookie with the username provided in the POST action
-  response.cookie('user', request.body.username);
+  response.cookie('username', request.body.username);
   response.redirect('/');
 });
 
