@@ -2,6 +2,7 @@ var express = require('express');
 var app = express();
 const bodyParser = require('body-parser');
 var crypto = require('crypto');  //Used for generating random numbers
+var cookieParser = require('cookie-parser');
 var PORT = process.env.PORT || 8080;
 
 //Configuration
@@ -11,6 +12,7 @@ app.set('view engine', 'ejs');
 //Middleware
 //Use body parser - used in app.post('/urls')
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(cookieParser());
 
 //Generate a random 6 character hex string
 function generateRandomString(){
