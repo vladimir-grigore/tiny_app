@@ -14,11 +14,11 @@
         <% if(urls.hasOwnProperty(item)){ %>
             <li><%= item %> : <%= urls[item] %></li>
               <form method="POST" action="/urls/<%= item %>/delete">
-                <button>Delete</button>
+                <input type="submit" value="Delete">
               </form>
         <% }%>
     <% }%>
-    <a href="#">Shorten URL</a>
+    <a href="/urls/new">Shorten URL</a>
   </div>
 </body>
 </html>
