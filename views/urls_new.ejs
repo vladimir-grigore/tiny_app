@@ -1,15 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head></head>
+  <head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
   <body style="font-size:20px; padding:50px;">
-    <% include ./partials/_header %>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-4">
+          <% include ./partials/_header %>
+        </div>
+      </div>
 
-    <!-- The form will call the POST method on the /urls path -->
-    <form action="/urls" method="POST" style="margin:150px;">
-      <label for="longURL">Enter a URL:</label>
-      <input id="longURL" type="text" name="longURL" placeholder="http://" style="width: 300px">
-      <input type="submit" value="Submit">
-    </form>
-
+      <div class="row">
+        <div class="col-sm-8">
+          <!-- The form will call the POST method on the /urls path -->
+          <form action="/urls" method="POST">
+            <label for="longURL">Enter a URL:</label>
+            <input id="longURL" type="text" name="longURL" placeholder="http://" style="width: 300px">
+            <input type="submit" value="Submit">
+          </form>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
