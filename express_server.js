@@ -4,9 +4,11 @@ const bodyParser = require('body-parser');
 var crypto = require('crypto');  //Used for generating random numbers
 var PORT = process.env.PORT || 8080;
 
+//Configuration
 //Enable ejs to use templates in the views folder
 app.set('view engine', 'ejs');
 
+//Middleware
 //Use body parser - used in app.post('/urls')
 app.use(bodyParser.urlencoded({extended: true}));
 
