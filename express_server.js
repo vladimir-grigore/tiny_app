@@ -39,11 +39,13 @@ app.get('/urls', (request, response) => {
 });
 
 //post action after submitting the form on /urls/new
-//create a new entry in urlDatabase with a random key
+//Creates a new entry in urlDatabase with a random key
 //and the longURL passed in the request as a value
 app.post('/urls', (request, response) => {
   let shortURL = generateRandomString();
   urlDatabase[shortURL] = request.body.longURL;
+
+  //After the entry is created in urlDatabase, redirect to its details page
   return response.redirect(`/urls/${shortURL}`);
 });
 
@@ -57,6 +59,13 @@ app.get('/urls/:id', (request, response) => {
   var templateVars = { shortURL: request.params.id };
   templateVars['url'] = urlDatabase[request.params.id];
   response.render('urls_show', templateVars);
+});
+
+
+//Handle url redirection when hitting a short url
+app.get('/u/:shortURL', (request, response) => {
+  let longURL = urlDatabase[request.params.shortURL];
+  response.redirect(longURL);
 });
 
 //display the /hello page
