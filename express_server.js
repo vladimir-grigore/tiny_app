@@ -44,7 +44,7 @@ app.get('/urls', (request, response) => {
 app.post('/urls', (request, response) => {
   let shortURL = generateRandomString();
   urlDatabase[shortURL] = request.body.longURL;
-  response.send('OK');
+  return response.redirect(`/urls/${shortURL}`);
 });
 
 //display the /urls/new page
