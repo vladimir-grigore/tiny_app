@@ -99,6 +99,12 @@ app.post('/login', (request, response) => {
   response.redirect('/');
 });
 
+app.post('/logout', (request, response) => {
+  //Remove the cookie
+  response.clearCookie('username');
+  response.redirect('/');
+});
+
 //Open port 8080
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
