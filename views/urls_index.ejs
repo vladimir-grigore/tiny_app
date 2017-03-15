@@ -13,8 +13,9 @@
     <ul>
       <% for(var item in urls) {%>
           <% if(urls.hasOwnProperty(item)){ %>
-            <li><%= item %> : <%= urls[item] %>
-              <form method="POST" action="/urls/<%= item %>/delete">
+            <li><%= item %> -> <%= urls[item] %>
+              <form method="POST" action="/urls/<%= item %>/delete" style="display: inline; margin: 10px;">
+                <a href="/urls/<%= item %>">Edit</a>
                 <input type="submit" value="Delete">
               </form>
             </li>
