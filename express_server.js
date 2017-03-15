@@ -86,6 +86,13 @@ app.get('/u/:shortURL', (request, response) => {
   response.redirect(longURL);
 });
 
+//Handle setting the cookie for the username
+app.post('/login', (request, response) => {
+  //Set the cookie with the username provided in the POST action
+  response.cookie('user', request.body.username);
+  response.redirect('/');
+});
+
 //Open port 8080
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
