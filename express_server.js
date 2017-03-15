@@ -65,9 +65,9 @@ app.get('/urls/new', (request, response) => {
 app.get('/urls/:id', (request, response) => {
   let templateVars = {
     shortURL: request.params.id,
-    username: request.cookies.username
+    username: request.cookies.username,
+    url: urlDatabase[request.params.id]
      };
-  templateVars['url'] = urlDatabase[request.params.id];
   response.render('urls_show', templateVars);
 });
 
