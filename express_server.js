@@ -39,8 +39,11 @@ app.get('/urls', (request, response) => {
 });
 
 //post action after submitting the form on /urls/new
+//create a new entry in urlDatabase with a random key
+//and the longURL passed in the request as a value
 app.post('/urls', (request, response) => {
-  console.log(request.body);
+  let shortURL = generateRandomString();
+  urlDatabase[shortURL] = request.body.longURL;
   response.send('OK');
 });
 
