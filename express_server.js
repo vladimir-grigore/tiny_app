@@ -32,11 +32,20 @@ function checkExistingEmail(email) {
 
 //Check if the user password is already stored in the users DB
 function checkExistingPassword(password) {
-  for (var item in users) {
+  for (let item in users) {
     if(users[item].password === password){
       return true;
     } else {
       return false;
+    }
+  }
+}
+
+//Return the user id based on the username and password
+function retrieveUserID(email, password) {
+  for (let item in users) {
+    if (users[item].password === password && users[item].email === email){
+      return item;
     }
   }
 }
@@ -139,13 +148,17 @@ app.get('/login', (request, response) => {
 
 //Login POST action
 app.post('/login', (request, response) => {
-  if (checkExistingEmail(request.body.email) && checkExistingPassword(request.body.password)) {
-    console.log("Success login")
-    response.redirect('/');
-    //Set the cookie for the logged in user
-    // response.cookie('user_id', request.body.username);
+  if (checkExistingEmail(request.body.email)) {
+    if(checkExistingPassword(request.body.password)){
+      let user_id = retrieveUserID(request.body.email, request.body.password);
+      // Set the cookie for the logged in user
+      response.cookie('user_id', user_id);
+      response.redirect('/');
+    } else {
+      response.status(403).send('Password not found.');
+    }
   } else {
-    response.status(400).send('Bad Request.');
+    response.status(403).send('Email not found.');
   }
 });
 
