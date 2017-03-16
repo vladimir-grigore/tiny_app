@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Register</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-4">
+          <header>
+
+          </header>
+        </div>
+      </div>
+      <div class="page-header">
+        <h1>Register</h1>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-8">
+          <!-- The form will call the POST method on the /urls path -->
+          <form action="/register" method="POST">
+            <div class="form-group">
+              <label style="font-size: 1.5em;" for="email">Enter the email:</label>
+              <input class="form-control" id="email" type="email" name="email" style="width: 150px">
+            </div>
+            <div class="form-group">
+              <label style="font-size: 1.5em;" for="password">Enter password:</label>
+              <input class="form-control" id="password" type="password" name="password" style="width: 150px">
+            </div>
+            <input class="btn btn-primary" type="submit" value="Submit">
+          </form>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

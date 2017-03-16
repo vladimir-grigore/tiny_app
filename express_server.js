@@ -105,6 +105,10 @@ app.post('/logout', (request, response) => {
   response.redirect('/');
 });
 
+app.get('/register', (request, response) => {
+  response.render('urls_register');
+});
+
 //Open port 8080
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
