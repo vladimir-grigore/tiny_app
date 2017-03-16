@@ -19,6 +19,17 @@ function generateRandomString(){
   return crypto.randomBytes(3).toString('hex');
 }
 
+//Check if the user email is already stored in the users DB
+function checkExistingEmail(email) {
+  for (var item in users) {
+    if(users[item].email === email){
+      return true;
+    } else {
+      return false;
+    }
+  }
+}
+
 //Holds our instances of shortned urls
 //and their reference to their original form
 var urlDatabase = {
@@ -27,13 +38,7 @@ var urlDatabase = {
 };
 
 //Holds user information
-const users = {
-  "userID1": {
-    id: "userID1",
-    email: "userID1@example.com",
-    password: "userID1"
-  }
-}
+const users = {};
 
 //Custom middleware - store the username from the cookie in res.locals obj
 app.use((request, response, next) => {
@@ -127,13 +132,29 @@ app.get('/register', (request, response) => {
 //Store the user in the "DB" and set a cookie
 app.post('/register', (request, response) => {
   let userID = generateRandomString();
-  users[userID] = {
-    id: userID,
-    email: request.body.email,
-    password: request.body.password
+  let requestEmail = request.body.email;
+  let requestPassword = request.body.password;
+
+  //Check to see if the email and password fields are empty
+  if (requestEmail && requestPassword) {
+    //Check to see if the email is already taken
+    if(!checkExistingEmail(requestEmail)){
+      console.log("Email", request.body.email);
+      console.log("Pass", request.body.password);
+      console.log("Success");
+      users[userID] = {
+        id: userID,
+        email: request.body.email,
+        password: request.body.password
+      }
+      response.cookie('user_id', userID);
+      response.redirect('/');
+    } else {
+      response.status(400).send('Bad Request. Email aready taken.');
+    }
+  } else {
+    response.status(400).send('Bad Request. Empty email or password fields.');
   }
-  response.cookie('user_id', userID);
-  response.redirect('/');
 });
 
 //Open port 8080
