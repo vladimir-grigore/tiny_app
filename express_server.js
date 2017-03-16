@@ -35,6 +35,12 @@ const users = {
   }
 }
 
+//Custom middleware - store the username from the cookie in res.locals obj
+app.use((request, response, next) => {
+  response.locals.username = request.cookies.username;
+  next();
+});
+
 //Index page
 app.get('/', (request, response) => {
   response.send('Hello');
@@ -49,7 +55,7 @@ app.get('/urls.json', (request, response) => {
 app.get('/urls', (request, response) => {
   let templateVars = {
     urls: urlDatabase,
-    username: request.cookies.username };
+     };
   response.render('urls_index', templateVars);
 });
 
@@ -66,15 +72,13 @@ app.post('/urls', (request, response) => {
 
 //Display the /urls/new page
 app.get('/urls/new', (request, response) => {
-  let templateVars = {username: request.cookies.username};
-  response.render('urls_new', templateVars);
+  response.render('urls_new');
 });
 
 //Display details page for a specific key in urlDatabase object
 app.get('/urls/:id', (request, response) => {
   let templateVars = {
     shortURL: request.params.id,
-    username: request.cookies.username,
     url: urlDatabase[request.params.id]
      };
   response.render('urls_show', templateVars);
@@ -118,7 +122,6 @@ app.post('/logout', (request, response) => {
 //User registration page
 app.get('/register', (request, response) => {
   response.render('urls_register');
-
 });
 
 //Store the user in the "DB" and set a cookie
@@ -129,7 +132,7 @@ app.post('/register', (request, response) => {
     email: request.body.email,
     password: request.body.password
   }
-  response.cookie('userID', userID);
+  response.cookie('user_id', userID);
   response.redirect('/');
 });
 
