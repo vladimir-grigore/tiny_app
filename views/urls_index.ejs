@@ -30,8 +30,8 @@
                 <td><%= item %></td>
                 <td><%= urls[item] %></td>
                 <td>
-                  <form method="POST" action="/urls/<%= item %>/delete" style="display: inline; margin: 10px;">
-                    <a href="/urls/<%= item %>" class="btn btn-primary">Edit</a>
+                  <form class="form-inline" method="POST" action="/urls/<%= item %>/delete" style="margin: 10px;">
+                    <a href="/urls/<%= item %>" class="btn btn-default">Edit</a>
                     <input class="btn btn-primary" type="submit" value="Delete">
                   </form>
                 </td>
