@@ -30,6 +30,17 @@ function checkExistingEmail(email) {
   }
 }
 
+//Check if the user password is already stored in the users DB
+function checkExistingPassword(password) {
+  for (var item in users) {
+    if(users[item].password === password){
+      return true;
+    } else {
+      return false;
+    }
+  }
+}
+
 //Holds our instances of shortned urls
 //and their reference to their original form
 var urlDatabase = {
@@ -50,7 +61,7 @@ app.use((request, response, next) => {
   const user = users[request.cookies.user_id];
   // If the user is found, add it to the request
   if(user){
-    // request.user = user;
+    request.user = user;
     response.locals.user = users[request.cookies.user_id];
   }
 
@@ -121,11 +132,21 @@ app.get('/u/:shortURL', (request, response) => {
   response.redirect(longURL);
 });
 
-//Handle setting the cookie for the username
+//Login page
+app.get('/login', (request, response) => {
+  response.render('urls_login');
+});
+
+//Login POST action
 app.post('/login', (request, response) => {
-  //Set the cookie with the username provided in the POST action
-  // response.cookie('username', request.body.username);
-  response.redirect('/');
+  if (checkExistingEmail(request.body.email) && checkExistingPassword(request.body.password)) {
+    console.log("Success login")
+    response.redirect('/');
+    //Set the cookie for the logged in user
+    // response.cookie('user_id', request.body.username);
+  } else {
+    response.status(400).send('Bad Request.');
+  }
 });
 
 //Clear user cookie on logout and redirect to index page
@@ -150,9 +171,6 @@ app.post('/register', (request, response) => {
   if (requestEmail && requestPassword) {
     //Check to see if the email is already taken
     if(!checkExistingEmail(requestEmail)){
-      console.log("Email", request.body.email);
-      console.log("Pass", request.body.password);
-      console.log("Success");
       users[userID] = {
         id: userID,
         email: request.body.email,
