@@ -1,35 +1,35 @@
 <!DOCTYPE html>
-<html>
-<head>
-  <title>Url details</title>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-</head>
-<body>
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-sm-4">
-        <header>
-          <% include ./partials/_header %>
-        </header>
+<html lang="en">
+  <head>
+    <title>Url details</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-4">
+          <header>
+            <% include ./partials/_header %>
+          </header>
+        </div>
+      </div>
+      <div class="page-header">
+        <h1>URL Details</h1>
+      </div>
+      <div class="row">
+        <div class="col-sm-8">
+            <%= shortURL %> : <%= url %>
+        </div>
+        <div class="col-sm-8">
+          <!-- The form will call the POST method on the /urls path -->
+          <form action="/urls/<%= shortURL %>" method="POST">
+            <label for="longURL">Enter a new URL:</label>
+            <input id="longURL" type="text" name="longURL" placeholder="http://" style="width: 300px">
+            <input class="btn btn-primary" type="submit" value="Update">
+          </form>
+        </div>
       </div>
     </div>
-    <div class="page-header">
-      <h1>URL Details</h1>
-    </div>
-    <div class="row">
-      <div class="col-sm-8">
-          <%= shortURL %> : <%= url %>
-      </div>
-      <div class="col-sm-8">
-        <!-- The form will call the POST method on the /urls path -->
-        <form action="/urls/<%= shortURL %>" method="POST">
-          <label for="longURL">Enter a new URL:</label>
-          <input id="longURL" type="text" name="longURL" placeholder="http://" style="width: 300px">
-          <input class="btn btn-primary" type="submit" value="Update">
-        </form>
-      </div>
-    </div>
-  </div>
-</body>
+  </body>
 </html>
