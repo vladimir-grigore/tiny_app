@@ -1,16 +1,34 @@
 <div class="container">
   <div class="jumbotron">
-<% if(username){ %>
-  <h1>Hello <%= username %></h1>
-  <form action="/logout" method="POST">
-    <input type="submit" value="Logout">
-  </form>
-<% }else{ %>
-  <form action="/login" method="POST">
-    <label for="username">Enter username:</label>
-    <input id="username" type="text" name="username" style="width: 100px">
-    <input type="submit" value="Submit">
-  </form>
-<% } %>
-</div>
+    <nav class="navbar navbar-default" role="navigation">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#">
+            <span class="glyphicon glyphicon glyphicon-globe"></span>
+            Tiny App
+          </a>
+        </div>
+
+        <div class="nav navbar-nav">
+          <li><a href="/">Home</a></li>
+          <li><a href="/urls">Urls</a></li>
+          <li><a href="/urls/new">New Url</a></li>
+          <li><a href="/urls.json">Urls JSON</a></li>
+        </div>
+      </div>
+    </nav>
+
+    <% if(username){ %>
+      <h1>Hello <%= username %></h1>
+      <form action="/logout" method="POST">
+        <input type="submit" value="Logout">
+      </form>
+    <% }else{ %>
+      <form action="/login" method="POST">
+        <label for="username">Enter username:</label>
+        <input id="username" type="text" name="username" style="width: 100px">
+        <input type="submit" value="Submit">
+      </form>
+    <% } %>
+  </div>
 </div>
