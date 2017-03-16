@@ -31,15 +31,15 @@
               <td><%= urls[item] %></td>
               <td>
                 <form method="POST" action="/urls/<%= item %>/delete" style="display: inline; margin: 10px;">
-                  <a href="/urls/<%= item %>">Edit</a>
-                  <input type="submit" value="Delete">
+                  <a href="/urls/<%= item %>" class="btn btn-primary">Edit</a>
+                  <input class="btn btn-primary" type="submit" value="Delete">
                 </form>
               </td>
             </tr>
             <% }%>
         <% }%>
     </table>
-    <a href="/urls/new">Shorten URL</a>
+    <a class="btn btn-primary" href="/urls/new">Shorten URL</a>
   </div>
 </body>
 </html>

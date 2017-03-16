@@ -21,13 +21,13 @@
     <% if(username){ %>
       <h1>Hello <%= username %></h1>
       <form action="/logout" method="POST">
-        <input type="submit" value="Logout">
+        <input class="btn btn-default" type="submit" value="Logout">
       </form>
     <% }else{ %>
       <form action="/login" method="POST">
         <label for="username">Enter username:</label>
         <input id="username" type="text" name="username" style="width: 100px">
-        <input type="submit" value="Submit">
+        <input class="btn btn-default" type="submit" value="Submit">
       </form>
     <% } %>
   </div>
