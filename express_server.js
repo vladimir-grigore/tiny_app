@@ -26,6 +26,20 @@ var urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+//Holds user information
+const users = {
+  "userID1": {
+    id: "userID1",
+    email: "userID1@example.com",
+    password: "userID1"
+  },
+ "userID2": {
+    id: "userID2",
+    email: "userID2@example.com",
+    password: "userID2"
+  }
+}
+
 //Index page
 app.get('/', (request, response) => {
   response.send('Hello');
@@ -99,12 +113,14 @@ app.post('/login', (request, response) => {
   response.redirect('/');
 });
 
+//Clear user cookie on logout and redirect to index page
 app.post('/logout', (request, response) => {
   //Remove the cookie
   response.clearCookie('username');
   response.redirect('/');
 });
 
+//User registration page
 app.get('/register', (request, response) => {
   response.render('urls_register');
 });
