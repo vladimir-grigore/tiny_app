@@ -16,19 +16,5 @@
         </div>
       </div>
     </nav>
-
-
-    <% if(username){ %>
-      <h1>Hello <%= username %></h1>
-      <form action="/logout" method="POST">
-        <input class="btn btn-default" type="submit" value="Logout">
-      </form>
-    <% }else{ %>
-      <form class="form-inline" action="/login" method="POST">
-        <label for="username" style="font-size: 1.2em;">Enter username:</label>
-        <input class="form-control" id="username" type="text" name="username" style="width: 100px">
-        <input class="btn btn-default" type="submit" value="Submit">
-      </form>
-    <% } %>
   </div>
 </div>

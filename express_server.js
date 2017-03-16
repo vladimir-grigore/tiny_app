@@ -38,17 +38,28 @@ var urlDatabase = {
 };
 
 //Holds user information
-const users = {};
+const users = {
+  "userRandomID": {
+    id: "userRandomID",
+    email: "user@example.com",
+    password: "purple-monkey-dinosaur"
+  }};
 
-//Custom middleware - store the username from the cookie in res.locals obj
+//Custom middleware
 app.use((request, response, next) => {
-  response.locals.username = request.cookies.username;
+  const user = users[request.cookies.user_id];
+  // If the user is found, add it to the request
+  if(user){
+    // request.user = user;
+    response.locals.user = users[request.cookies.user_id];
+  }
+
   next();
 });
 
 //Index page
 app.get('/', (request, response) => {
-  response.send('Hello');
+  response.redirect('/urls');
 });
 
 //Return the urlDatabase object in JSON format
@@ -113,14 +124,14 @@ app.get('/u/:shortURL', (request, response) => {
 //Handle setting the cookie for the username
 app.post('/login', (request, response) => {
   //Set the cookie with the username provided in the POST action
-  response.cookie('username', request.body.username);
+  // response.cookie('username', request.body.username);
   response.redirect('/');
 });
 
 //Clear user cookie on logout and redirect to index page
 app.post('/logout', (request, response) => {
   //Remove the cookie
-  response.clearCookie('username');
+  response.clearCookie('user_id');
   response.redirect('/');
 });
 
