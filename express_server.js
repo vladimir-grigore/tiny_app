@@ -61,8 +61,8 @@ var urlDatabase = {
 const users = {
   "userRandomID": {
     id: "userRandomID",
-    email: "user@example.com",
-    password: "purple-monkey-dinosaur"
+    email: "a@a.a",
+    password: "pass"
   }};
 
 //Custom middleware
@@ -73,7 +73,6 @@ app.use((request, response, next) => {
     request.user = user;
     response.locals.user = users[request.cookies.user_id];
   }
-
   next();
 });
 
@@ -148,7 +147,9 @@ app.get('/login', (request, response) => {
 
 //Login POST action
 app.post('/login', (request, response) => {
+  //Check if the email exists
   if (checkExistingEmail(request.body.email)) {
+    //Check if the password exists
     if(checkExistingPassword(request.body.password)){
       let user_id = retrieveUserID(request.body.email, request.body.password);
       // Set the cookie for the logged in user
