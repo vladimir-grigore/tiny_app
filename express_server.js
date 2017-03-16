@@ -32,11 +32,6 @@ const users = {
     id: "userID1",
     email: "userID1@example.com",
     password: "userID1"
-  },
- "userID2": {
-    id: "userID2",
-    email: "userID2@example.com",
-    password: "userID2"
   }
 }
 
@@ -123,6 +118,19 @@ app.post('/logout', (request, response) => {
 //User registration page
 app.get('/register', (request, response) => {
   response.render('urls_register');
+
+});
+
+//Store the user in the "DB" and set a cookie
+app.post('/register', (request, response) => {
+  let userID = generateRandomString();
+  users[userID] = {
+    id: userID,
+    email: request.body.email,
+    password: request.body.password
+  }
+  response.cookie('userID', userID);
+  response.redirect('/');
 });
 
 //Open port 8080
