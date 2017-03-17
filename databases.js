@@ -16,5 +16,7 @@ var users = {
   }
 };
 
-module.exports.users = users;
-module.exports.urlDatabase = urlDatabase;
+module.exports = {
+  users: users,
+  urlDatabase: urlDatabase
+}
