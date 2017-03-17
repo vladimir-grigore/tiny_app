@@ -169,7 +169,7 @@ app.get('/urls/:id', (request, response) => {
 });
 
 //Handle updating a longUrl on /urls/:id page
-app.post('/urls/:id', (request, response) => {
+app.put('/urls/:id', (request, response) => {
   if(request.session.user_id) {
     //Set the value in the DB to the new longURL
     urlDatabase[request.session.user_id][request.params.id] = request.body.longURL;
@@ -183,7 +183,7 @@ app.post('/urls/:id', (request, response) => {
 });
 
 //Handle deletion of a url and redirect to /urls page
-app.post('/urls/:id/delete', (request, response) => {
+app.delete('/urls/:id/delete', (request, response) => {
   if(request.session.user_id) {
     //Set the value in the DB to the new longURL
     delete urlDatabase[request.session.user_id][request.params.id];
