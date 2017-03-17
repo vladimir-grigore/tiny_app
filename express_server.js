@@ -56,7 +56,7 @@ var userId;
 //Check if the user email is already stored in the users DB
 function checkExistingEmail(email) {
   var flag = false;
-  for (var item in users) {
+  for (let item in users) {
     if(users[item].email === email){
       flag = true;
       userId = users[item].id;
@@ -187,8 +187,15 @@ app.post('/urls/:id/delete', (request, response) => {
 
 //Handle url redirection when hitting a short url
 app.get('/u/:shortURL', (request, response) => {
-  let longURL = urlDatabase[request.params.shortURL];
-  response.redirect(longURL);
+  for (let item in urlDatabase) {
+    //If the short url is in the DB, redirect to the longURL page
+    if(urlDatabase[item].hasOwnProperty(request.params.shortURL)){
+      let longURL = urlDatabase[item][request.params.shortURL];
+      response.redirect(longURL);
+    } else {
+      response.redirect('/');
+    }
+  }
 });
 
 //Login page
