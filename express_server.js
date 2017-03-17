@@ -9,8 +9,6 @@ var PORT = process.env.PORT || 8080;
 //Enable ejs to use templates in the views folder
 app.set('view engine', 'ejs');
 
-
-
 //Middleware
 //Use body parser - used in app.post('/urls')
 app.use(bodyParser.urlencoded({extended: true}));
@@ -20,10 +18,6 @@ app.use(cookieParser());
 function generateRandomString(){
   return crypto.randomBytes(3).toString('hex');
 }
-
-
-
-
 
 //Return the user id based on the username and password
 function retrieveUserID(email, password) {
@@ -37,8 +31,10 @@ function retrieveUserID(email, password) {
 //Holds our instances of shortned urls
 //and their reference to their original form
 var urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
+  "firstUserID": {
+    "b2xVn2": "http://www.lighthouselabs.ca",
+    "9sm5xK": "http://www.google.com"
+  }
 };
 
 //Custom middleware
@@ -80,8 +76,8 @@ function checkExistingPassword(password) {
 
 //Holds user information
 var users = {
-  "userRandomID": {
-    id: "userRandomID",
+  "firstUserID": {
+    id: "firstUserID",
     email: "a@a.a",
     password: "pass"
   }
@@ -99,10 +95,16 @@ app.get('/urls.json', (request, response) => {
 
 //Display the /urls page - will show all items in urlDatabase object
 app.get('/urls', (request, response) => {
-  let templateVars = {
-    urls: urlDatabase
-     };
-  response.render('urls_index', templateVars);
+  //Check to see if user is logged in
+  //If not, redirect to the login page
+  if(request.cookies.user_id) {
+    let templateVars = {
+      urls: urlDatabase[request.cookies.user_id]
+       };
+    response.render('urls_index', templateVars);
+  } else {
+    return response.redirect('/login');
+  }
 });
 
 //Post action after submitting the form on /urls/new
