@@ -16,6 +16,11 @@
         </div>
       </div>
     </nav>
+    <% if(user != 'undefined') { %>
+      <p>Hello</p>
+    <% } else { %>
+      <p>User not logged in or undefined</p>
+    <% } %>
     <a href="/register">Register</a>
     <a href="/login">Login</a>
     <form action="/logout" method="POST">

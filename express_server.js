@@ -1,6 +1,6 @@
 var express = require('express');
 var app = express();
-const bodyParser = require('body-parser');
+var bodyParser = require('body-parser');
 var crypto = require('crypto');  //Used for generating random numbers
 var cookieParser = require('cookie-parser');
 var PORT = process.env.PORT || 8080;
@@ -8,6 +8,8 @@ var PORT = process.env.PORT || 8080;
 //Configuration
 //Enable ejs to use templates in the views folder
 app.set('view engine', 'ejs');
+
+
 
 //Middleware
 //Use body parser - used in app.post('/urls')
@@ -19,27 +21,9 @@ function generateRandomString(){
   return crypto.randomBytes(3).toString('hex');
 }
 
-//Check if the user email is already stored in the users DB
-function checkExistingEmail(email) {
-  for (var item in users) {
-    if(users[item].email === email){
-      return true;
-    } else {
-      return false;
-    }
-  }
-}
 
-//Check if the user password is already stored in the users DB
-function checkExistingPassword(password) {
-  for (let item in users) {
-    if(users[item].password === password){
-      return true;
-    } else {
-      return false;
-    }
-  }
-}
+
+
 
 //Return the user id based on the username and password
 function retrieveUserID(email, password) {
@@ -57,24 +41,53 @@ var urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
-//Holds user information
-const users = {
-  "userRandomID": {
-    id: "userRandomID",
-    email: "a@a.a",
-    password: "pass"
-  }};
-
 //Custom middleware
 app.use((request, response, next) => {
   const user = users[request.cookies.user_id];
   // If the user is found, add it to the request
   if(user){
-    request.user = user;
-    response.locals.user = users[request.cookies.user_id];
+    // request.user = user;
+    response.locals.user = user;
+  } else {
+    response.locals.user = 'undefined';
   }
   next();
 });
+
+//Store the user ID globally
+var userId;
+
+//Check if the user email is already stored in the users DB
+function checkExistingEmail(email) {
+  var flag = false;
+  for (var item in users) {
+    if(users[item].email === email){
+      flag = true;
+      userId = users[item].id;
+    }
+  } //for loop
+  return flag;
+} //bracket function ends;
+
+//Check if the user password is already stored in the users DB
+function checkExistingPassword(password) {
+  if (password === users[userId].password){
+    console.log("password matched");
+    return true;
+  }else{
+    console.log("password not matched");
+    return false;
+  }
+}
+
+//Holds user information
+var users = {
+  "userRandomID": {
+    id: "userRandomID",
+    email: "a@a.a",
+    password: "pass"
+  }
+};
 
 //Index page
 app.get('/', (request, response) => {
@@ -89,7 +102,7 @@ app.get('/urls.json', (request, response) => {
 //Display the /urls page - will show all items in urlDatabase object
 app.get('/urls', (request, response) => {
   let templateVars = {
-    urls: urlDatabase,
+    urls: urlDatabase
      };
   response.render('urls_index', templateVars);
 });
@@ -151,9 +164,11 @@ app.post('/login', (request, response) => {
   if (checkExistingEmail(request.body.email)) {
     //Check if the password exists
     if(checkExistingPassword(request.body.password)){
+      console.log("email and password was true");
       let user_id = retrieveUserID(request.body.email, request.body.password);
       // Set the cookie for the logged in user
       response.cookie('user_id', user_id);
+      response.cookie('email', request.body.email);
       response.redirect('/');
     } else {
       response.status(403).send('Password not found.');
@@ -167,6 +182,8 @@ app.post('/login', (request, response) => {
 app.post('/logout', (request, response) => {
   //Remove the cookie
   response.clearCookie('user_id');
+  response.clearCookie('email');
+
   response.redirect('/');
 });
 
@@ -191,6 +208,7 @@ app.post('/register', (request, response) => {
         password: request.body.password
       }
       response.cookie('user_id', userID);
+      response.cookie('email', requestEmail);
       response.redirect('/');
     } else {
       response.status(400).send('Bad Request. Email aready taken.');
