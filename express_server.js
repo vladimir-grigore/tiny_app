@@ -131,20 +131,29 @@ app.get('/urls/new', (request, response) => {
 
 //Display details page for a specific key in urlDatabase object
 app.get('/urls/:id', (request, response) => {
-  let templateVars = {
-    shortURL: request.params.id,
-    url: urlDatabase[request.params.id]
-     };
-  response.render('urls_show', templateVars);
+  if(request.cookies.user_id) {
+    let templateVars = {
+      shortURL: request.params.id,
+      url: urlDatabase[request.cookies.user_id][request.params.id]
+       };
+    response.render('urls_show', templateVars);
+  } else {
+    return response.redirect('/login');
+  }
 });
 
 //Handle updating a longUrl on /urls/:id page
 app.post('/urls/:id', (request, response) => {
-  //Set the value in the DB to the new longURL
-  urlDatabase[request.params.id] = request.body.longURL;
+  if(request.cookies.user_id) {
+    //Set the value in the DB to the new longURL
+    urlDatabase[request.cookies.user_id][request.params.id] = request.body.longURL;
 
-  //Refresh page so that the new longURL is displayed
-  return response.redirect(`/urls/${request.params.id}`);
+    //Refresh page so that the new longURL is displayed
+    return response.redirect(`/urls/${request.params.id}`);
+  } else {
+    return response.redirect('/login');
+  }
+
 });
 
 //Handle deletion of a url and redirect to /urls page
