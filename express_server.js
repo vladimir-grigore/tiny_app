@@ -15,7 +15,7 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieSession({
   name: 'session',
-  keys: [/* secret keys */],
+  secret: process.env.SESSION_SECRET || "lighthouse",
 
   // Cookie Options
   maxAge: 24 * 60 * 60 * 1000 // 24 hours
@@ -46,7 +46,7 @@ var urlDatabase = {
 
 //Custom middleware
 app.use((request, response, next) => {
-  const user = users[request.cookies.user_id];
+  const user = users[request.session.user_id];
   // If the user is found, add it to the request
   if(user){
     // request.user = user;
@@ -92,7 +92,7 @@ var users = {
   "firstUserID": {
     id: "firstUserID",
     email: "a@a.a",
-    password: "pass"
+    password: "$2a$05$7.i.tolIwhRACirAlePQaegQlnsvpQRp4.GzcQnFO/RQvj9Y.ORN."
   }
 };
 
@@ -110,8 +110,8 @@ app.get('/urls.json', (request, response) => {
 app.get('/urls', (request, response) => {
   //Check to see if user is logged in
   //If not, redirect to the login page
-  if(request.cookies.user_id) {
-    let templateVars = { urls: urlsForUser(request.cookies.user_id)};
+  if(request.session.user_id) {
+    let templateVars = { urls: urlsForUser(request.session.user_id)};
     response.render('urls_index', templateVars);
   } else {
     return response.redirect('/login');
@@ -124,15 +124,15 @@ app.get('/urls', (request, response) => {
 app.post('/urls', (request, response) => {
   //Check to see if user is logged in
   //If not, redirect to the login page
-  if(request.cookies.user_id) {
+  if(request.session.user_id) {
     //If there are no entries in the urlDatabase,
     //create an empty object for the current user
-    if(!urlsForUser(request.cookies.user_id)) {
-      urlDatabase[request.cookies.user_id] = {};
+    if(!urlsForUser(request.session.user_id)) {
+      urlDatabase[request.session.user_id] = {};
     }
 
     let shortURL = generateRandomString();
-    urlDatabase[request.cookies.user_id][shortURL] = request.body.longURL;
+    urlDatabase[request.session.user_id][shortURL] = request.body.longURL;
 
     //After the entry is created in urlDatabase, redirect to its details page
     return response.redirect(`/urls/${shortURL}`);
@@ -145,7 +145,7 @@ app.post('/urls', (request, response) => {
 app.get('/urls/new', (request, response) => {
   //Check to see if user is logged in
   //If not, redirect to the login page
-  if(request.cookies.user_id) {
+  if(request.session.user_id) {
     response.render('urls_new');
   } else {
     return response.redirect('/login');
@@ -154,10 +154,10 @@ app.get('/urls/new', (request, response) => {
 
 //Display details page for a specific key in urlDatabase object
 app.get('/urls/:id', (request, response) => {
-  if(request.cookies.user_id) {
+  if(request.session.user_id) {
     let templateVars = {
       shortURL: request.params.id,
-      url: urlDatabase[request.cookies.user_id][request.params.id]
+      url: urlDatabase[request.session.user_id][request.params.id]
        };
     response.render('urls_show', templateVars);
   } else {
@@ -167,9 +167,9 @@ app.get('/urls/:id', (request, response) => {
 
 //Handle updating a longUrl on /urls/:id page
 app.post('/urls/:id', (request, response) => {
-  if(request.cookies.user_id) {
+  if(request.session.user_id) {
     //Set the value in the DB to the new longURL
-    urlDatabase[request.cookies.user_id][request.params.id] = request.body.longURL;
+    urlDatabase[request.session.user_id][request.params.id] = request.body.longURL;
 
     //Refresh page so that the new longURL is displayed
     return response.redirect(`/urls/${request.params.id}`);
@@ -181,9 +181,9 @@ app.post('/urls/:id', (request, response) => {
 
 //Handle deletion of a url and redirect to /urls page
 app.post('/urls/:id/delete', (request, response) => {
-  if(request.cookies.user_id) {
+  if(request.session.user_id) {
     //Set the value in the DB to the new longURL
-    delete urlDatabase[request.cookies.user_id][request.params.id];
+    delete urlDatabase[request.session.user_id][request.params.id];
 
     //Return to the urls page
     response.redirect('/urls');
@@ -219,8 +219,9 @@ app.post('/login', (request, response) => {
     if(checkExistingPassword(request.body.password)){
       console.log("email and password was true");
       // Set the cookie for the logged in user
-      response.cookie('user_id', userId);
-      response.cookie('email', request.body.email);
+      request.session.user_id = userId;
+      request.session.email = request.body.email;
+
       response.redirect('/');
     } else {
       response.status(403).send('Password not found.');
@@ -233,8 +234,7 @@ app.post('/login', (request, response) => {
 //Clear user cookie on logout and redirect to index page
 app.post('/logout', (request, response) => {
   //Remove the cookie
-  response.clearCookie('user_id');
-  response.clearCookie('email');
+  request.session = null;
 
   response.redirect('/');
 });
@@ -259,11 +259,9 @@ app.post('/register', (request, response) => {
         email: request.body.email,
         password: bcrypt.hashSync(request.body.password, 5)
       }
+      request.session.user_id = userID;
+      request.session.email = requestEmail;
 
-      console.log("USERS:", users);
-
-      response.cookie('user_id', userID);
-      response.cookie('email', requestEmail);
       response.redirect('/');
     } else {
       response.status(400).send('Bad Request. Email aready taken.');
