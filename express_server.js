@@ -65,17 +65,15 @@ function checkExistingEmail(email) {
       flag = true;
       userId = users[item].id;
     }
-  } //for loop
+  }
   return flag;
-} //bracket function ends;
+}
 
 //Check if the user password is already stored in the users DB
 function checkExistingPassword(password) {
   if (password === users[userId].password){
-    console.log("password matched");
     return true;
   }else{
-    console.log("password not matched");
     return false;
   }
 }
@@ -120,7 +118,13 @@ app.post('/urls', (request, response) => {
 
 //Display the /urls/new page
 app.get('/urls/new', (request, response) => {
-  response.render('urls_new');
+  //Check to see if user is logged in
+  //If not, redirect to the login page
+  if(request.cookies.user_id) {
+    response.render('urls_new');
+  } else {
+    return response.redirect('/login');
+  }
 });
 
 //Display details page for a specific key in urlDatabase object
@@ -161,7 +165,7 @@ app.get('/login', (request, response) => {
 //Login POST action
 app.post('/login', (request, response) => {
   //Check if the email exists
-  if (checkExistingEmail(request.body.email)) {
+  if(checkExistingEmail(request.body.email)) {
     //Check if the password exists
     if(checkExistingPassword(request.body.password)){
       console.log("email and password was true");
