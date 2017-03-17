@@ -23,10 +23,20 @@ function checkExistingEmail(email) {
   return flag;
 }
 
+function createUser(userId, email, password){
+  databases.users[userId] = {
+    'id': userId,
+    'email': email,
+    'password': bcrypt.hashSync(password, 5)
+  }
+};
+
+//Retrieve the userId
 function getUserId() {
   return userId;
 }
 
+//Clear the userId
 function clearUserId(){
   userId = '';
 }
@@ -48,6 +58,7 @@ function urlsForUser(id) {
 module.exports = {
   getUserId: getUserId,
   clearUserId: clearUserId,
+  createUser: createUser,
   generateRandomString: generateRandomString,
   checkExistingEmail: checkExistingEmail,
   checkExistingPassword: checkExistingPassword,

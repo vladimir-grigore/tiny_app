@@ -18,13 +18,13 @@
     </nav>
     <% if(user != 'undefined') { %>
       <p>Hello</p>
+      <form action="/logout" method="POST">
+        <input type="submit" value="Logout">
+      </form>
     <% } else { %>
       <p>User not logged in</p>
+      <a href="/register">Register</a>
+      <a href="/login">Login</a>
     <% } %>
-    <a href="/register">Register</a>
-    <a href="/login">Login</a>
-    <form action="/logout" method="POST">
-      <input type="submit" value="Logout">
-    </form>
   </div>
 </div>

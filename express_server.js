@@ -194,11 +194,9 @@ app.post('/register', (request, response) => {
   if (requestEmail && requestPassword) {
     //Check to see if the email is already taken
     if(!helper.checkExistingEmail(requestEmail)){
-      databases.users[userID] = {
-        id: userID,
-        email: request.body.email,
-        password: bcrypt.hashSync(request.body.password, 5)
-      }
+      //Create new user
+      helper.createUser(userID, requestEmail, requestPassword);
+      //Set the cookies
       request.session.user_id = userID;
       request.session.email = requestEmail;
       response.redirect('/');
