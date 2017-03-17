@@ -3,6 +3,7 @@ var app = express();
 var bodyParser = require('body-parser');
 var crypto = require('crypto');  //Used for generating random numbers
 var bcrypt = require('bcrypt');
+var methodOverride = require('method-override');
 var cookieSession = require('cookie-session');
 var PORT = process.env.PORT || 8080;
 
@@ -13,6 +14,8 @@ app.set('view engine', 'ejs');
 //Middleware
 //Use body parser - used in app.post('/urls')
 app.use(bodyParser.urlencoded({extended: true}));
+
+app.use(methodOverride('_method'));
 app.use(cookieSession({
   name: 'session',
   secret: process.env.SESSION_SECRET || "lighthouse",

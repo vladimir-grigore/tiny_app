@@ -39,7 +39,7 @@
                 <td><%= item %></td>
                 <td><%= urls[item] %></td>
                 <td>
-                  <form class="form-inline" method="POST" action="/urls/<%= item %>/delete" style="margin: 10px;">
+                  <form class="form-inline" method="POST" action="/urls/<%= item %>/delete?_method=DELETE" style="margin: 10px;">
                     <a href="/urls/<%= item %>" class="btn btn-default">Edit</a>
                     <input class="btn btn-primary" type="submit" value="Delete">
                   </form>
