@@ -23,7 +23,7 @@
         </div>
         <div class="col-sm-8">
           <!-- The form will call the POST method on the /urls path -->
-          <form class="form-inline" action="/urls/<%= shortURL %>" method="POST">
+          <form class="form-inline" action="/urls/<%= shortURL %>method=PUT" method="POST">
             <label style="font-size: 1.5em;" for="longURL">Enter a new URL:</label>
             <input class="form-control" id="longURL" type="text" name="longURL" placeholder="http://" style="width: 300px">
             <input class="btn btn-primary" type="submit" value="Update">
