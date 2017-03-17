@@ -74,6 +74,11 @@ function checkExistingPassword(password) {
   }
 }
 
+//Retrieve only the urls of the currently logged in user
+function urlsForUser(id) {
+  return urlDatabase[id];
+}
+
 //Holds user information
 var users = {
   "firstUserID": {
@@ -98,9 +103,7 @@ app.get('/urls', (request, response) => {
   //Check to see if user is logged in
   //If not, redirect to the login page
   if(request.cookies.user_id) {
-    let templateVars = {
-      urls: urlDatabase[request.cookies.user_id]
-       };
+    let templateVars = { urls: urlsForUser(request.cookies.user_id)};
     response.render('urls_index', templateVars);
   } else {
     return response.redirect('/login');
@@ -114,6 +117,12 @@ app.post('/urls', (request, response) => {
   //Check to see if user is logged in
   //If not, redirect to the login page
   if(request.cookies.user_id) {
+    //If there are no entries in the urlDatabase,
+    //create an empty object for the current user
+    if(!urlsForUser(request.cookies.user_id)) {
+      urlDatabase[request.cookies.user_id] = {};
+    }
+
     let shortURL = generateRandomString();
     urlDatabase[request.cookies.user_id][shortURL] = request.body.longURL;
 
