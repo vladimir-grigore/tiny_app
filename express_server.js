@@ -111,11 +111,17 @@ app.get('/urls', (request, response) => {
 //Creates a new entry in urlDatabase with a random key
 //and the longURL passed in the request as a value
 app.post('/urls', (request, response) => {
-  let shortURL = generateRandomString();
-  urlDatabase[shortURL] = request.body.longURL;
+  //Check to see if user is logged in
+  //If not, redirect to the login page
+  if(request.cookies.user_id) {
+    let shortURL = generateRandomString();
+    urlDatabase[request.cookies.user_id][shortURL] = request.body.longURL;
 
-  //After the entry is created in urlDatabase, redirect to its details page
-  return response.redirect(`/urls/${shortURL}`);
+    //After the entry is created in urlDatabase, redirect to its details page
+    return response.redirect(`/urls/${shortURL}`);
+  } else {
+    return response.redirect('/login');
+  }
 });
 
 //Display the /urls/new page
