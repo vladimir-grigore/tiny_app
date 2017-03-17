@@ -3,7 +3,7 @@ var app = express();
 var bodyParser = require('body-parser');
 var crypto = require('crypto');  //Used for generating random numbers
 var bcrypt = require('bcrypt');
-var cookieParser = require('cookie-parser');
+var cookieSession = require('cookie-session');
 var PORT = process.env.PORT || 8080;
 
 //Configuration
@@ -13,7 +13,13 @@ app.set('view engine', 'ejs');
 //Middleware
 //Use body parser - used in app.post('/urls')
 app.use(bodyParser.urlencoded({extended: true}));
-app.use(cookieParser());
+app.use(cookieSession({
+  name: 'session',
+  keys: [/* secret keys */],
+
+  // Cookie Options
+  maxAge: 24 * 60 * 60 * 1000 // 24 hours
+}))
 
 //Generate a random 6 character hex string
 function generateRandomString(){
