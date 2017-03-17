@@ -158,8 +158,16 @@ app.post('/urls/:id', (request, response) => {
 
 //Handle deletion of a url and redirect to /urls page
 app.post('/urls/:id/delete', (request, response) => {
-  delete urlDatabase[request.params.id];
-  response.redirect('/urls');
+  if(request.cookies.user_id) {
+    //Set the value in the DB to the new longURL
+    delete urlDatabase[request.cookies.user_id][request.params.id];
+
+    //Return to the urls page
+    response.redirect('/urls');
+  } else {
+    return response.redirect('/login');
+  }
+
 });
 
 //Handle url redirection when hitting a short url
