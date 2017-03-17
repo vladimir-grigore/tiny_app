@@ -2,6 +2,7 @@ var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
 var crypto = require('crypto');  //Used for generating random numbers
+var bcrypt = require('bcrypt');
 var cookieParser = require('cookie-parser');
 var PORT = process.env.PORT || 8080;
 
@@ -51,6 +52,7 @@ app.use((request, response, next) => {
 });
 
 //Store the user ID globally
+//When checkExistingEmail finds a user, it will also store the userID
 var userId;
 
 //Check if the user email is already stored in the users DB
@@ -67,7 +69,7 @@ function checkExistingEmail(email) {
 
 //Check if the user password is already stored in the users DB
 function checkExistingPassword(password) {
-  if (password === users[userId].password){
+  if (bcrypt.compareSync(password, users[userId].password)){
     return true;
   }else{
     return false;
@@ -210,9 +212,8 @@ app.post('/login', (request, response) => {
     //Check if the password exists
     if(checkExistingPassword(request.body.password)){
       console.log("email and password was true");
-      let user_id = retrieveUserID(request.body.email, request.body.password);
       // Set the cookie for the logged in user
-      response.cookie('user_id', user_id);
+      response.cookie('user_id', userId);
       response.cookie('email', request.body.email);
       response.redirect('/');
     } else {
@@ -250,8 +251,11 @@ app.post('/register', (request, response) => {
       users[userID] = {
         id: userID,
         email: request.body.email,
-        password: request.body.password
+        password: bcrypt.hashSync(request.body.password, 5)
       }
+
+      console.log("USERS:", users);
+
       response.cookie('user_id', userID);
       response.cookie('email', requestEmail);
       response.redirect('/');
