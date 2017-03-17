@@ -27,6 +27,10 @@ function getUserId() {
   return userId;
 }
 
+function clearUserId(){
+  userId = '';
+}
+
 //Check if the user password is already stored in the users DB
 function checkExistingPassword(password) {
   if (bcrypt.compareSync(password, databases.users[userId].password)){
@@ -43,6 +47,7 @@ function urlsForUser(id) {
 
 module.exports = {
   getUserId: getUserId,
+  clearUserId: clearUserId,
   generateRandomString: generateRandomString,
   checkExistingEmail: checkExistingEmail,
   checkExistingPassword: checkExistingPassword,

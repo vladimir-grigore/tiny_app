@@ -42,7 +42,12 @@ app.get('/', (request, response) => {
 
 //Return the urlDatabase object in JSON format
 app.get('/urls.json', (request, response) => {
-  response.json(databases.urlDatabase[helper.getUserId()]);
+  //Check to see if the user is logged in
+  if(request.session.user_id) {
+    response.json(databases.urlDatabase[helper.getUserId()]);
+  } else {
+    return response.redirect('/login');
+  }
 });
 
 //Display the /urls page - will show all items in urlDatabase object
@@ -170,6 +175,7 @@ app.post('/login', (request, response) => {
 app.post('/logout', (request, response) => {
   //Remove the cookie
   request.session = null;
+  helper.clearUserId();
   response.redirect('/');
 });
 
