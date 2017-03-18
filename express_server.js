@@ -27,13 +27,22 @@ app.use((request, response, next) => {
   const user = databases.users[request.session.user_id];
   // If the user is found, add it to the request
   if(user){
-    // request.user = user;
     response.locals.user = user;
   } else {
-    response.locals.user = 'undefined';
+    response.locals.user = undefined;
   }
   next();
 });
+
+//Check to see if the user is logged in
+//if not, redirect to the login page
+function require_auth(request, response, next) {
+  if(request.session.user_id) {
+    next()
+  } else {
+    response.redirect('/login');
+  }
+}
 
 //Index page
 app.get('/', (request, response) => {
@@ -41,98 +50,64 @@ app.get('/', (request, response) => {
 });
 
 //Return the urlDatabase object in JSON format
-app.get('/urls.json', (request, response) => {
+app.get('/urls.json', require_auth, (request, response) => {
   //Check to see if the user is logged in
-  if(request.session.user_id) {
-    response.json(databases.urlDatabase[helper.getUserId()]);
-  } else {
-    return response.redirect('/login');
-  }
+  response.json(databases.urlDatabase[request.session.user_id]);
 });
 
 //Display the /urls page - will show all items in urlDatabase object
-app.get('/urls', (request, response) => {
-  //Check to see if user is logged in
-  //If not, redirect to the login page
-  if(request.session.user_id) {
-    let templateVars = { urls: helper.urlsForUser(request.session.user_id)};
-    response.render('urls_index', templateVars);
-  } else {
-    return response.redirect('/login');
-  }
+app.get('/urls', require_auth, (request, response) => {
+  let templateVars = { urls: helper.urlsForUser(request.session.user_id)};
+  response.render('urls_index', templateVars);
 });
 
 //Post action after submitting the form on /urls/new
 //Creates a new entry in urlDatabase with a random key
 //and the longURL passed in the request as a value
-app.post('/urls', (request, response) => {
-  //Check to see if user is logged in
-  //If not, redirect to the login page
-  if(request.session.user_id) {
-    //If there are no entries in the urlDatabase,
-    //create an empty object for the current user
-    if(!helper.urlsForUser(request.session.user_id)) {
-      databases.urlDatabase[request.session.user_id] = {};
-    }
-
-    let shortURL = helper.generateRandomString();
-    databases.urlDatabase[request.session.user_id][shortURL] = request.body.longURL;
-
-    //After the entry is created in urlDatabase, redirect to its details page
-    return response.redirect(`/urls/${shortURL}`);
-  } else {
-    return response.redirect('/login');
+app.post('/urls', require_auth, (request, response) => {
+  //If there are no entries in the urlDatabase,
+  //create an empty object for the current user
+  if(!helper.urlsForUser(request.session.user_id)) {
+    databases.urlDatabase[request.session.user_id] = {};
   }
+
+  //Create a random string for the shortURL
+  let shortURL = helper.generateRandomString();
+  databases.urlDatabase[request.session.user_id][shortURL] = request.body.longURL;
+
+  //After the entry is created in urlDatabase, redirect to its details page
+  response.redirect(`/urls/${shortURL}`);
 });
 
 //Display the /urls/new page
-app.get('/urls/new', (request, response) => {
-  //Check to see if user is logged in
-  //If not, redirect to the login page
-  if(request.session.user_id) {
-    response.render('urls_new');
-  } else {
-    return response.redirect('/login');
-  }
+app.get('/urls/new', require_auth, (request, response) => {
+  response.render('urls_new');
 });
 
 //Display details page for a specific key in urlDatabase object
-app.get('/urls/:id', (request, response) => {
-  if(request.session.user_id) {
-    let templateVars = {
-      shortURL: request.params.id,
-      url: databases.urlDatabase[request.session.user_id][request.params.id]
-       };
-    response.render('urls_show', templateVars);
-  } else {
-    return response.redirect('/login');
-  }
+app.get('/urls/:id', require_auth, (request, response) => {
+  let templateVars = {
+    shortURL: request.params.id,
+    url: databases.urlDatabase[request.session.user_id][request.params.id]
+     };
+  response.render('urls_show', templateVars);
 });
 
 //Handle updating a longUrl on /urls/:id page
-app.put('/urls/:id', (request, response) => {
-  if(request.session.user_id) {
+app.put('/urls/:id', require_auth, (request, response) => {
     //Set the value in the DB to the new longURL
     databases.urlDatabase[request.session.user_id][request.params.id] = request.body.longURL;
 
     //Refresh page so that the new longURL is displayed
     return response.redirect(`/urls/${request.params.id}`);
-  } else {
-    return response.redirect('/login');
-  }
 });
 
 //Handle deletion of a url and redirect to /urls page
-app.delete('/urls/:id/delete', (request, response) => {
-  if(request.session.user_id) {
+app.delete('/urls/:id/delete', require_auth, (request, response) => {
     //Set the value in the DB to the new longURL
     delete databases.urlDatabase[request.session.user_id][request.params.id];
     //Return to the urls page
     response.redirect('/urls');
-  } else {
-    return response.redirect('/login');
-  }
-
 });
 
 //Handle url redirection when hitting a short url
@@ -142,10 +117,11 @@ app.get('/u/:shortURL', (request, response) => {
     if(databases.urlDatabase[item].hasOwnProperty(request.params.shortURL)){
       let longURL = databases.urlDatabase[item][request.params.shortURL];
       response.redirect(longURL);
-    } else {
-      response.redirect('/');
+      return;
     }
   }
+
+  response.redirect('/');
 });
 
 //Login page
