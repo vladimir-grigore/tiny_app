@@ -5,7 +5,7 @@ var methodOverride = require('method-override');
 var cookieSession = require('cookie-session');
 var helper = require('./helper_functions'); //Import helper functions
 var databases = require('./databases'); //Import the databases objects
-var PORT = process.env.PORT || 8080;
+var PORT = process.env.PORT || 3000;
 
 //Configuration
 //Enable ejs to use templates in the views folder
@@ -40,14 +40,18 @@ function require_auth(request, response, next) {
   if(request.session.user_id) {
     next()
   } else {
-    response.status(401);
-    response.render('not_logged_in');
+    response.status(401).render('not_logged_in');
   }
 }
 
 //Index page
 app.get('/', (request, response) => {
-  response.redirect('/urls');
+  //Not logged in users are automatically redirected to /login page
+  if(request.session.user_id) {
+    response.redirect('/urls');
+  } else {
+    response.redirect('/login');
+  }
 });
 
 //Return the urlDatabase object in JSON format
