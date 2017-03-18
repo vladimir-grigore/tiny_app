@@ -101,11 +101,11 @@ app.get('/urls/:id', require_auth, (request, response) => {
 
 //Handle updating a longUrl on /urls/:id page
 app.put('/urls/:id', require_auth, (request, response) => {
-    //Set the value in the DB to the new longURL
-    databases.urlDatabase[request.session.user_id][request.params.id] = request.body.longURL;
+  //Set the value in the DB to the new longURL
+  databases.urlDatabase[request.session.user_id][request.params.id] = request.body.longURL;
 
-    //Refresh page so that the new longURL is displayed
-    response.redirect(`/urls/${request.params.id}`);
+  //Refresh page so that the new longURL is displayed
+  response.redirect(`/urls/${request.params.id}`);
 });
 
 //Handle deletion of a url and redirect to /urls page
@@ -126,8 +126,7 @@ app.get('/u/:shortURL', (request, response) => {
       return;
     }
   }
-
-  response.redirect('/');
+  response.status(404).render('404');
 });
 
 //Login page
