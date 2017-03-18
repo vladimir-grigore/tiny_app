@@ -91,7 +91,12 @@ app.get('/urls/:id', require_auth, (request, response) => {
     shortURL: request.params.id,
     url: databases.urlDatabase[request.session.user_id][request.params.id]
      };
-  response.render('urls_show', templateVars);
+  //Display 404 page if the resource is not found
+  if(templateVars.url){
+    response.render('urls_show', templateVars);
+  } else {
+    response.status(404).render('404');
+  }
 });
 
 //Handle updating a longUrl on /urls/:id page
