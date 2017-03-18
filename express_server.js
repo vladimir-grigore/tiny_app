@@ -99,7 +99,7 @@ app.put('/urls/:id', require_auth, (request, response) => {
     databases.urlDatabase[request.session.user_id][request.params.id] = request.body.longURL;
 
     //Refresh page so that the new longURL is displayed
-    return response.redirect(`/urls/${request.params.id}`);
+    response.redirect(`/urls/${request.params.id}`);
 });
 
 //Handle deletion of a url and redirect to /urls page
@@ -149,7 +149,7 @@ app.post('/login', (request, response) => {
 
 //Clear user cookie on logout and redirect to index page
 app.post('/logout', (request, response) => {
-  //Remove the cookie
+  //Remove the cookie and clear the userId
   request.session = null;
   helper.clearUserId();
   response.redirect('/');
