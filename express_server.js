@@ -40,7 +40,8 @@ function require_auth(request, response, next) {
   if(request.session.user_id) {
     next()
   } else {
-    response.redirect('/login');
+    response.status(401);
+    response.render('not_logged_in');
   }
 }
 
