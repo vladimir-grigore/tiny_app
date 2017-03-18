@@ -11,7 +11,7 @@ var urlDatabase = {
 var users = {
   "firstUserID": {
     id: "firstUserID",
-    email: "a@a.a",
+    email: "AwesomePerson@lighthouselabs.ca",
     password: "$2a$05$7.i.tolIwhRACirAlePQaegQlnsvpQRp4.GzcQnFO/RQvj9Y.ORN."
   }
 };
