@@ -126,6 +126,11 @@ app.get('/u/:shortURL', (request, response) => {
 
 //Login page
 app.get('/login', (request, response) => {
+  //If the user is already logged in do not show the page
+  if(request.session.user_id) {
+    response.redirect('/');
+    return;
+  }
   response.render('urls_login');
 });
 
