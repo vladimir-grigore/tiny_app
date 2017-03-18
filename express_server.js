@@ -140,10 +140,10 @@ app.post('/login', (request, response) => {
       request.session.email = request.body.email;
       response.redirect('/');
     } else {
-      response.status(403).send('Password not found.');
+      response.status(401).send('Password not found.');
     }
   } else {
-    response.status(403).send('Email not found.');
+    response.status(401).send('Email not found.');
   }
 });
 
@@ -157,6 +157,11 @@ app.post('/logout', (request, response) => {
 
 //User registration page
 app.get('/register', (request, response) => {
+  //If the user is already logged in do not show the page
+  if(request.session.user_id) {
+    response.redirect('/');
+    return;
+  }
   response.render('urls_register');
 });
 
