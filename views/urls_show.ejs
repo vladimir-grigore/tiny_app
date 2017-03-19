@@ -24,10 +24,6 @@
       <h1>URL Details</h1>
     </div>
 
-    <% if(!visits) { %>
-      <% visits = 0; %>
-    <% } %>
-
     <div class="col-sm-8">
       <table class="table-striped">
         <tr>
@@ -49,6 +45,19 @@
         <input class="form-control" id="longURL" type="text" name="longURL" placeholder="http://" style="width: 300px">
         <input class="btn btn-primary" type="submit" value="Update">
       </form>
+      <br/>
+      <h2>Visitor log</h2>
+      <table class="table-striped">
+        <tr>
+          <th>Visitor ID</th>
+          <th>Time visited</th>
+        </tr>
+        <tr>
+          <td><%= shortURL %></td>
+          <td><%= visits %>
+          </td>
+        </tr>
+      </table>
     </div>
   </div>
 </body>

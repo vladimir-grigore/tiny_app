@@ -97,10 +97,14 @@ app.get('/urls/:id', require_auth, (request, response) => {
 
   if(helper.databaseHasUrl(requestShortUrl)) {
     if(helper.userOwnsUrl(currentUserID, requestShortUrl)) {
+      //If the urls has no visits yet, set it to 0
+      let timesVisited = databases.urlVisits[requestShortUrl] ?
+      databases.urlVisits[requestShortUrl].visits : 0;
+
       let templateVars = {
         shortURL: requestShortUrl,
         url: longUrl,
-        visits: databases.urlVisits[requestShortUrl]
+        visits: timesVisited
       };
       response.render('urls_show', templateVars);
     } else {

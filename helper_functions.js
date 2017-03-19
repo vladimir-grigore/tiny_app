@@ -79,11 +79,11 @@ function urlsForUser(id) {
 //Create entry in urlVisits DB object
 //If entry already exists, increment by one
 function increaseCounterForUrl(short_url) {
-  if(databases.urlVisits[short_url]) {
-    databases.urlVisits[short_url] += 1;
-  } else {
-    databases.urlVisits[short_url] = 1;
+  if(!databases.urlVisits[short_url]){
+    databases.urlVisits[short_url] = {};
+    databases.urlVisits[short_url].visits = 0;
   }
+  databases.urlVisits[short_url].visits += 1;
 }
 
 module.exports = {
