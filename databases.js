@@ -7,6 +7,10 @@ var urlDatabase = {
   }
 };
 
+//For analytics purposes
+//Keep track how many times each url has been visited
+var urlVisits = {};
+
 //Holds user information
 //First user has password "pass" - for testing purposes
 var users = {
@@ -19,5 +23,6 @@ var users = {
 
 module.exports = {
   users: users,
+  urlVisits: urlVisits,
   urlDatabase: urlDatabase
 }
