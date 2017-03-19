@@ -102,14 +102,13 @@ app.get('/urls/:id', require_auth, (request, response) => {
       databases.urlVisits[requestShortUrl].visits : 0;
 
       let templateVars = {
-        currentUserID: currentUserID,
         shortURL: requestShortUrl,
         url: longUrl,
         visits: timesVisited
       };
 
       if(databases.urlVisits[requestShortUrl]) {
-        templateVars.timestamps = databases.urlVisits[requestShortUrl][currentUserID]
+        templateVars.timestamps = databases.urlVisits[requestShortUrl]
       }
 
       response.render('urls_show', templateVars);

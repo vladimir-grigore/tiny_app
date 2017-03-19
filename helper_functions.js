@@ -1,6 +1,8 @@
 var crypto = require('crypto');  //Used for generating random numbers
 var bcrypt = require('bcrypt');  //Used for password encryption
 var databases = require('./databases'); //Import the databases objects
+var moment = require('moment'); //Used to get timestamps in local timezone
+var now = moment();
 
 //Store the user ID globally
 //When checkExistingEmail finds a user, it will also store the userId
@@ -86,14 +88,16 @@ function increaseCounterForUrl(short_url) {
   databases.urlVisits[short_url].visits += 1;
 }
 
+//Add a visit timestamp per each url and user_id combinaton
 function addVisitTimestampForUser(user_id, short_url) {
-  let date = new Date();
+  let formatted = now.format('YYYY-MM-DD HH:mm:ss');
 
   if(!databases.urlVisits[short_url][user_id]){
     databases.urlVisits[short_url][user_id] = [];
-    databases.urlVisits[short_url][user_id].push(date.getTime());
+    databases.urlVisits[short_url][user_id].push(formatted);
+  } else {
+    databases.urlVisits[short_url][user_id].push(formatted);
   }
-  databases.urlVisits[short_url][user_id].push(date.getTime());
 }
 
 module.exports = {

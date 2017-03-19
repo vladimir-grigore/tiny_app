@@ -50,16 +50,23 @@
       <table class="table-striped">
         <tr>
           <th>Visitor ID</th>
-          <th>Time visited</th>
+          <th>Time of visit</th>
         </tr>
-        <tr>
-          <td><%= currentUserID %></td>
           <% if(typeof timestamps !== 'undefined') {%>
-            <td><%= timestamps %></td>
-            <% } else { %>
-              <td></td>
+            <% for(var user in timestamps) {%>
+              <% for(var entry in timestamps[user]) {%>
+                <tr>
+                  <td><%= user %></td>
+                  <td><%= timestamps[user][entry] %></td>
+                </tr>
+              <% } %>
             <% } %>
-        </tr>
+          <% } else { %>
+            <tr>
+              <td></td>
+              <td></td>
+            </tr>
+          <% } %>
       </table>
     </div>
   </div>
