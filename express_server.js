@@ -102,10 +102,16 @@ app.get('/urls/:id', require_auth, (request, response) => {
       databases.urlVisits[requestShortUrl].visits : 0;
 
       let templateVars = {
+        currentUserID: currentUserID,
         shortURL: requestShortUrl,
         url: longUrl,
         visits: timesVisited
       };
+
+      if(databases.urlVisits[requestShortUrl]) {
+        templateVars.timestamps = databases.urlVisits[requestShortUrl][currentUserID]
+      }
+
       response.render('urls_show', templateVars);
     } else {
       response.status(403).send("Not authorized to view this url.");
@@ -139,6 +145,7 @@ app.get('/u/:shortURL', (request, response) => {
     if(databases.urlDatabase[item].hasOwnProperty(request.params.shortURL)){
       let longURL = databases.urlDatabase[item][request.params.shortURL];
       helper.increaseCounterForUrl(request.params.shortURL);
+      helper.addVisitTimestampForUser(request.session.user_id, request.params.shortURL);
       response.redirect(longURL);
       return;
     }

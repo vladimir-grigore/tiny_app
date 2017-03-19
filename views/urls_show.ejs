@@ -53,9 +53,12 @@
           <th>Time visited</th>
         </tr>
         <tr>
-          <td><%= shortURL %></td>
-          <td><%= visits %>
-          </td>
+          <td><%= currentUserID %></td>
+          <% if(typeof timestamps !== 'undefined') {%>
+            <td><%= timestamps %></td>
+            <% } else { %>
+              <td></td>
+            <% } %>
         </tr>
       </table>
     </div>

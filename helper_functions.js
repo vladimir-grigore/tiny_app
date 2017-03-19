@@ -86,6 +86,16 @@ function increaseCounterForUrl(short_url) {
   databases.urlVisits[short_url].visits += 1;
 }
 
+function addVisitTimestampForUser(user_id, short_url) {
+  let date = new Date();
+
+  if(!databases.urlVisits[short_url][user_id]){
+    databases.urlVisits[short_url][user_id] = [];
+    databases.urlVisits[short_url][user_id].push(date.getTime());
+  }
+  databases.urlVisits[short_url][user_id].push(date.getTime());
+}
+
 module.exports = {
   getUserId: getUserId,
   clearUserId: clearUserId,
@@ -93,6 +103,7 @@ module.exports = {
   databaseHasUrl: databaseHasUrl,
   userOwnsUrl: userOwnsUrl,
   increaseCounterForUrl: increaseCounterForUrl,
+  addVisitTimestampForUser: addVisitTimestampForUser,
   generateRandomString: generateRandomString,
   checkExistingEmail: checkExistingEmail,
   checkExistingPassword: checkExistingPassword,
