@@ -99,7 +99,8 @@ app.get('/urls/:id', require_auth, (request, response) => {
     if(helper.userOwnsUrl(currentUserID, requestShortUrl)) {
       let templateVars = {
         shortURL: requestShortUrl,
-        url: longUrl
+        url: longUrl,
+        visits: databases.urlVisits[requestShortUrl]
       };
       response.render('urls_show', templateVars);
     } else {
@@ -133,6 +134,7 @@ app.get('/u/:shortURL', (request, response) => {
     //If the short url is in the DB, redirect to the longURL page
     if(databases.urlDatabase[item].hasOwnProperty(request.params.shortURL)){
       let longURL = databases.urlDatabase[item][request.params.shortURL];
+      helper.increaseCounterForUrl(request.params.shortURL);
       response.redirect(longURL);
       return;
     }

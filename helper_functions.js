@@ -76,12 +76,23 @@ function urlsForUser(id) {
   return databases.urlDatabase[id];
 }
 
+//Create entry in urlVisits DB object
+//If entry already exists, increment by one
+function increaseCounterForUrl(short_url) {
+  if(databases.urlVisits[short_url]) {
+    databases.urlVisits[short_url] += 1;
+  } else {
+    databases.urlVisits[short_url] = 1;
+  }
+}
+
 module.exports = {
   getUserId: getUserId,
   clearUserId: clearUserId,
   createUser: createUser,
   databaseHasUrl: databaseHasUrl,
   userOwnsUrl: userOwnsUrl,
+  increaseCounterForUrl: increaseCounterForUrl,
   generateRandomString: generateRandomString,
   checkExistingEmail: checkExistingEmail,
   checkExistingPassword: checkExistingPassword,

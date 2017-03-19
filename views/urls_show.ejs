@@ -1,35 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>Url details</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-  </head>
-  <body>
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-sm-4">
-          <header>
-            <% include ./partials/_header %>
-          </header>
-        </div>
-      </div>
-      <div class="page-header">
-        <h1>URL Details</h1>
-      </div>
-      <div class="row">
-        <div class="col-sm-8" style="font-size: 2em;">
-            <%= shortURL %> : <%= url %>
-        </div>
-        <div class="col-sm-8">
-          <!-- The form will call the POST method on the /urls path -->
-          <form class="form-inline" action="/urls/<%= shortURL %>?_method=PUT" method="POST">
-            <label style="font-size: 1.5em;" for="longURL">Enter a new URL:</label>
-            <input class="form-control" id="longURL" type="text" name="longURL" placeholder="http://" style="width: 300px">
-            <input class="btn btn-primary" type="submit" value="Update">
-          </form>
-        </div>
+<head>
+  <title>Url details</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style type="text/css">
+    tr, td, th {
+      font-size: 1.2em;
+      padding-right: 15px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-4">
+        <header>
+          <% include ./partials/_header %>
+        </header>
       </div>
     </div>
-  </body>
+    <div class="page-header">
+      <h1>URL Details</h1>
+    </div>
+
+    <% if(!visits) { %>
+      <% visits = 0; %>
+    <% } %>
+
+    <div class="col-sm-8">
+      <table class="table-striped">
+        <tr>
+          <th>Short URL</th>
+          <th>Long URL</th>
+          <th>Times visited</th>
+        </tr>
+        <tr>
+          <td><%= shortURL %></td>
+          <td><%= url %></td>
+          <td><%= visits %>
+          </td>
+        </tr>
+      </table>
+      <br/>
+      <!-- The form will call the POST method on the /urls path -->
+      <form class="form-inline" action="/urls/<%= shortURL %>?_method=PUT" method="POST">
+        <label style="font-size: 1.5em;" for="longURL">Enter a new URL:</label>
+        <input class="form-control" id="longURL" type="text" name="longURL" placeholder="http://" style="width: 300px">
+        <input class="btn btn-primary" type="submit" value="Update">
+      </form>
+    </div>
+  </div>
+</body>
 </html>
