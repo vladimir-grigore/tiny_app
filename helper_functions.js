@@ -23,6 +23,7 @@ function checkExistingEmail(email) {
   return flag;
 }
 
+//Used in the registration form
 function createUser(userId, email, password){
   databases.users[userId] = {
     'id': userId,
@@ -50,6 +51,26 @@ function checkExistingPassword(password) {
   }
 }
 
+//Check to see if the long url is in the DB
+function databaseHasUrl(short_url) {
+  let flag = false;
+  for(let item in databases.urlDatabase){
+    if(databases.urlDatabase[item].hasOwnProperty(short_url)){
+      flag = true;
+    }
+  }
+  return flag;
+}
+
+//Check to see if a user is authorized to view a specific url
+function userOwnsUrl(user_id, short_url) {
+  if(databases.urlDatabase[user_id].hasOwnProperty(short_url)){
+    return true;
+  } else {
+    return false;
+  }
+}
+
 //Retrieve only the urls of the currently logged in user
 function urlsForUser(id) {
   return databases.urlDatabase[id];
@@ -59,6 +80,8 @@ module.exports = {
   getUserId: getUserId,
   clearUserId: clearUserId,
   createUser: createUser,
+  databaseHasUrl: databaseHasUrl,
+  userOwnsUrl: userOwnsUrl,
   generateRandomString: generateRandomString,
   checkExistingEmail: checkExistingEmail,
   checkExistingPassword: checkExistingPassword,

@@ -1,11 +1,11 @@
 var express = require('express');
-var app = express();
 var bodyParser = require('body-parser');
 var methodOverride = require('method-override');
 var cookieSession = require('cookie-session');
 var helper = require('./helper_functions'); //Import helper functions
 var databases = require('./databases'); //Import the databases objects
 var PORT = process.env.PORT || 3000;
+var app = express();
 
 //Configuration
 //Enable ejs to use templates in the views folder
@@ -91,13 +91,20 @@ app.get('/urls/new', require_auth, (request, response) => {
 
 //Display details page for a specific key in urlDatabase object
 app.get('/urls/:id', require_auth, (request, response) => {
-  let templateVars = {
-    shortURL: request.params.id,
-    url: databases.urlDatabase[request.session.user_id][request.params.id]
-     };
-  //Display 404 page if the resource is not found
-  if(templateVars.url){
-    response.render('urls_show', templateVars);
+  let currentUserID = request.session.user_id;
+  let requestShortUrl = request.params.id;
+  let longUrl = databases.urlDatabase[currentUserID][requestShortUrl];
+
+  if(helper.databaseHasUrl(requestShortUrl)) {
+    if(helper.userOwnsUrl(currentUserID, requestShortUrl)) {
+      let templateVars = {
+        shortURL: requestShortUrl,
+        url: longUrl
+      };
+      response.render('urls_show', templateVars);
+    } else {
+      response.status(403).send("Not authorized to view this url.");
+    }
   } else {
     response.status(404).render('404');
   }
@@ -181,7 +188,7 @@ app.get('/register', (request, response) => {
 
 //Store the user in the "DB" and set a cookie
 app.post('/register', (request, response) => {
-  let userID = helper.generateRandomString();
+  let requestUserID = helper.generateRandomString();
   let requestEmail = request.body.email;
   let requestPassword = request.body.password;
 
@@ -190,9 +197,9 @@ app.post('/register', (request, response) => {
     //Check to see if the email is already taken
     if(!helper.checkExistingEmail(requestEmail)){
       //Create new user
-      helper.createUser(userID, requestEmail, requestPassword);
+      helper.createUser(requestUserID, requestEmail, requestPassword);
       //Set the cookies
-      request.session.user_id = userID;
+      request.session.user_id = requestUserID;
       request.session.email = requestEmail;
       response.redirect('/');
     } else {

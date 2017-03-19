@@ -8,6 +8,7 @@ var urlDatabase = {
 };
 
 //Holds user information
+//First user has password "pass" - for testing purposes
 var users = {
   "firstUserID": {
     id: "firstUserID",
