@@ -141,7 +141,7 @@ app.delete('/urls/:id/delete', require_auth, (request, response) => {
 app.get('/u/:shortURL', (request, response) => {
   for (let item in databases.urlDatabase) {
     //If the short url is in the DB, redirect to the longURL page
-    if(databases.urlDatabase[item].hasOwnProperty(request.params.shortURL)){
+    if(databases.urlDatabase[item][request.params.shortURL] !== undefined){
       let longURL = databases.urlDatabase[item][request.params.shortURL];
       helper.increaseCounterForUrl(request.params.shortURL);
       helper.addVisitTimestampForUser(request.session.user_id, request.params.shortURL);

@@ -46,28 +46,23 @@
         <input class="btn btn-primary" type="submit" value="Update">
       </form>
       <br/>
-      <h2>Visitor log</h2>
-      <table class="table-striped">
-        <tr>
-          <th>Visitor ID</th>
-          <th>Time of visit</th>
-        </tr>
-          <% if(typeof timestamps !== 'undefined') {%>
-            <% for(var user in timestamps) {%>
-              <% for(var entry in timestamps[user]) {%>
-                <tr>
-                  <td><%= user %></td>
-                  <td><%= timestamps[user][entry] %></td>
-                </tr>
-              <% } %>
-            <% } %>
-          <% } else { %>
+      <% if(typeof timestamps !== 'undefined') {%>
+        <h2>Visitor log</h2>
+        <table class="table-striped">
+          <tr>
+            <th>Visitor ID</th>
+            <th>Time of visit</th>
+          </tr>
+        <% for(var user in timestamps) {%>
+          <% for(var entry in timestamps[user]) {%>
             <tr>
-              <td></td>
-              <td></td>
+              <td><%= user %></td>
+              <td><%= timestamps[user][entry] %></td>
             </tr>
           <% } %>
-      </table>
+        <% } %>
+        </table>
+      <% } %>
     </div>
   </div>
 </body>
