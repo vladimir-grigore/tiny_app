@@ -32,6 +32,7 @@
           <th>Short URL</th>
           <th>Long URL</th>
           <th>Actions</th>
+          <th>Visits</th>
         </tr>
           <% for(var item in urls) {%>
               <% if(urls.hasOwnProperty(item)){ %>
@@ -44,6 +45,7 @@
                     <input class="btn btn-primary" type="submit" value="Delete">
                   </form>
                 </td>
+                <td><%= urlVisits[item].visits %>
               </tr>
               <% }%>
           <% }%>

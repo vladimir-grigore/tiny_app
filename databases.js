@@ -9,7 +9,14 @@ var urlDatabase = {
 
 //For analytics purposes
 //Keep track how many times each url has been visited
-var urlVisits = {};
+var urlVisits = {
+  "b2xVn2": {
+    "visits": 0
+  },
+  "9sm5xK": {
+    "visits": 0
+  }
+};
 
 //Holds user information
 //First user has password "pass" - for testing purposes

@@ -34,6 +34,25 @@ function createUser(userId, email, password){
   databases.urlDatabase[userId] = {};
 };
 
+//Used for creating a new url in the urlDatabase
+function createNewUrlForUser(user_id, longURL) {
+  //If there are no entries in the urlDatabase,
+  //create an empty object for the current user
+  if(!urlsForUser(user_id)) {
+    databases.urlDatabase[user_id] = {};
+  }
+
+  //Create a random string for the shortURL
+  let shortURL = generateRandomString();
+  databases.urlDatabase[user_id][shortURL] = longURL;
+
+  //Create a new entry in the urlVisits to keep track of visitors
+  databases.urlVisits[shortURL] = {};
+  databases.urlVisits[shortURL].visits = 0;
+
+  return shortURL;
+}
+
 //Retrieve the userId
 function getUserId() {
   return userId;
@@ -102,6 +121,7 @@ module.exports = {
   getUserId: getUserId,
   clearUserId: clearUserId,
   createUser: createUser,
+  createNewUrlForUser: createNewUrlForUser,
   databaseHasUrl: databaseHasUrl,
   userOwnsUrl: userOwnsUrl,
   increaseCounterForUrl: increaseCounterForUrl,

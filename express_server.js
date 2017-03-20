@@ -62,7 +62,11 @@ app.get('/urls.json', require_auth, (request, response) => {
 
 //Display the /urls page - will show all items in urlDatabase object
 app.get('/urls', require_auth, (request, response) => {
-  let templateVars = { urls: helper.urlsForUser(request.session.user_id)};
+
+  let templateVars = {
+    urls: helper.urlsForUser(request.session.user_id), //databases.urlDatabase[user_id]
+    urlVisits: databases.urlVisits
+  };
   response.render('urls_index', templateVars);
 });
 
@@ -70,15 +74,8 @@ app.get('/urls', require_auth, (request, response) => {
 //Creates a new entry in urlDatabase with a random key
 //and the longURL passed in the request as a value
 app.post('/urls', require_auth, (request, response) => {
-  //If there are no entries in the urlDatabase,
-  //create an empty object for the current user
-  if(!helper.urlsForUser(request.session.user_id)) {
-    databases.urlDatabase[request.session.user_id] = {};
-  }
-
-  //Create a random string for the shortURL
-  let shortURL = helper.generateRandomString();
-  databases.urlDatabase[request.session.user_id][shortURL] = request.body.longURL;
+  //Create new url in the DB and all dependencies
+  let shortURL = helper.createNewUrlForUser(request.session.user_id, request.body.longURL);
 
   //After the entry is created in urlDatabase, redirect to its details page
   response.redirect(`/urls/${shortURL}`);
@@ -97,7 +94,7 @@ app.get('/urls/:id', require_auth, (request, response) => {
 
   if(helper.databaseHasUrl(requestShortUrl)) {
     if(helper.userOwnsUrl(currentUserID, requestShortUrl)) {
-      //If the urls has no visits yet, set it to 0
+      //If the url has no visits yet, set it to 0
       let timesVisited = databases.urlVisits[requestShortUrl] ?
       databases.urlVisits[requestShortUrl].visits : 0;
 
