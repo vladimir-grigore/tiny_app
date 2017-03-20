@@ -31,6 +31,7 @@ function createUser(userId, email, password){
     'email': email,
     'password': bcrypt.hashSync(password, 5)
   }
+  databases.urlDatabase[userId] = {};
 };
 
 //Retrieve the userId
