@@ -119,11 +119,16 @@ app.get('/urls/:id', require_auth, (request, response) => {
 
 //Handle updating a longUrl on /urls/:id page
 app.put('/urls/:id', require_auth, (request, response) => {
-  //Set the value in the DB to the new longURL
-  databases.urlDatabase[request.session.user_id][request.params.id] = request.body.longURL;
-
-  //Refresh page so that the new longURL is displayed
-  response.redirect(`/urls/${request.params.id}`);
+  if(helper.databaseHasUrl(request.params.id)) {
+    if(helper.userOwnsUrl(request.session.user_id, request.params.id)) {
+    //Set the value in the DB to the new longURL
+    databases.urlDatabase[request.session.user_id][request.params.id] = request.body.longURL;
+    //Refresh page so that the new longURL is displayed
+    response.redirect(`/urls/${request.params.id}`);
+    } else {
+      response.status(403).send("Not authorized to edit this url.");
+    }
+  }
 });
 
 //Handle deletion of a url and redirect to /urls page
